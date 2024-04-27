@@ -27,6 +27,6 @@ $router = new Router(dirname(__DIR__) . '/views' . DIRECTORY_SEPARATOR);
 
 $router
   ->get('/', 'post/index', 'home')
-  ->get('/blog/[*:slug]-[int:id]', 'post/show', 'post')
-  ->get('/blog/category', 'category/show', 'category')
+  ->get('/blog/category/[*:slug]-[i:id]', 'category/show', 'category')
+  ->get('/blog/[*:slug]-[i:id]', 'post/show', 'post')
   ->run();

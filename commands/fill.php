@@ -1,5 +1,7 @@
 <?php
 
+use App\Connection;
+
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
@@ -7,9 +9,7 @@ $dotenv->load();
 
 $faker = Faker\Factory::create('fr_FR');
 
-$pdo = new PDO($_ENV['DATABASE_URL'], $_ENV['DATABASE_USERNAME'], $_ENV['DATABASE_PASSWORD'], [
-  PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
+$pdo = Connection::getPDO();
 
 $pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
 $pdo->exec('TRUNCATE TABLE post_category');

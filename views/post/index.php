@@ -1,26 +1,13 @@
 <?php
 
+use App\Connection;
 use App\Model\Post;
+use App\URL;
 
-$pdo = new PDO($_ENV['DATABASE_URL'], $_ENV['DATABASE_USERNAME'], $_ENV['DATABASE_PASSWORD'], [
-  PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
+$pdo = Connection::getPDO();
 
-$page = $_GET['page'] ?? 1;
-if (!filter_var($page, FILTER_VALIDATE_INT)) {
-  throw new Exception('Numéro de page invalide');
-}
+$current_page = URL::getIntPositive('page', 1);
 
-if ($page === '1') {
-  header('Location: ' . $router->url('home'));
-  http_response_code(301);
-  exit();
-}
-
-$current_page = (int)($_GET['page'] ?? 1);
-if ($current_page <= 0) {
-  throw new Exception('Numéro de page invalide');
-}
 $count_posts = (int)$pdo->query("SELECT COUNT(id) count FROM post")->fetch()['count'];
 $posts_per_page = 12;
 $count_pages = ceil($count_posts / $posts_per_page);

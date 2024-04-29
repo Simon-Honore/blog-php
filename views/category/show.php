@@ -1,9 +1,8 @@
 <?php
 
-use App\Connection;
+use App\{Connection, PaginatedQuery};
 use App\Model\Category;
 use App\Model\Post;
-use App\URL;
 
 $pdo = Connection::getPDO();
 
@@ -29,30 +28,20 @@ if ($category->getSlug() !== $slug) {
 
 $title = "Catégorie {$category->getName()}";
 
-$current_page = URL::getIntPositive('page', 1);
-
-$count_posts = (int)$pdo
-  ->query("SELECT COUNT(category_id) count FROM post_category WHERE category_id = " . $category->getId())
-  ->fetch()['count'];
-
-$posts_per_page = 12;
-$count_pages = ceil($count_posts / $posts_per_page);
-
-if ($current_page > $count_pages) {
-  throw new Exception('Cette page n\'existe pas');
-}
-
-$offset = $posts_per_page * ($current_page - 1);
-
-$query = $pdo->query("
-  SELECT p.*
+$query = "
+  SELECT p.* 
   FROM post p 
-  JOIN post_category pc ON pc.post_id = p.id
-  WHERE pc.category_id = {$category->getId()}
-  ORDER BY created_at DESC 
-  LIMIT $posts_per_page OFFSET $offset
-  ");
-$posts = $query->fetchAll(PDO::FETCH_CLASS, Post::class);
+  JOIN post_category pc ON pc.post_id = p.id 
+  WHERE pc.category_id = {$category->getId()} 
+  ORDER BY created_at DESC";
+
+$queryCount = "
+  SELECT COUNT(category_id) 
+  FROM post_category WHERE category_id = {$category->getId()}";
+
+$paginatedQuery = new PaginatedQuery($query, $queryCount);
+
+$posts = $paginatedQuery->getItems(Post::class);
 
 $link = $router->url('category', ['slug' => $category->getSlug(), 'id' => $category->getId()]);
 
@@ -69,16 +58,6 @@ $link = $router->url('category', ['slug' => $category->getSlug(), 'id' => $categ
 </div>
 
 <div class="d-flex justify-content-between my-4">
-  <?php if ($current_page > 1) : ?>
-    <?php
-    $l = $link;
-    if ($current_page > 2) {
-      $l = $link . "?page=" . ($current_page - 1);
-    }
-    ?>
-    <a href="<?= $l ?>" class="btn btn-primary">&laquo; Page précédente</a>
-  <?php endif ?>
-  <?php if ($current_page < $count_pages) : ?>
-    <a href="<?= $link ?>?page=<?= $current_page + 1 ?>" class="btn btn-primary ms-auto">Page suivante &raquo;</a>
-  <?php endif ?>
+  <?= $paginatedQuery->previousPagLink($link) ?>
+  <?= $paginatedQuery->nextPagLink($link) ?>
 </div>

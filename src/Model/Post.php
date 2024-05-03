@@ -29,6 +29,18 @@ class Post
     return $this->name ? htmlentities($this->name) : null;
   }
 
+  public function setName(string $name): self
+  {
+    $this->name = $name;
+    return $this;
+  }
+
+  public function setContent(string $content): self
+  {
+    $this->content = $content;
+    return $this;
+  }
+
   /**
    * Get a excerpt of content of post converted to HTML entities
    * 

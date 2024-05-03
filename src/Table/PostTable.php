@@ -4,6 +4,7 @@ namespace App\Table;
 
 use App\Model\Post;
 use App\PaginatedQuery;
+use Exception;
 
 final class PostTable extends Table
 {
@@ -13,7 +14,7 @@ final class PostTable extends Table
   public function findPaginated()
   {
     $paginatedQuery = new PaginatedQuery(
-      "SELECT * FROM post ORDER BY created_at DESC",
+      "SELECT * FROM {$this->table} ORDER BY created_at DESC",
       "SELECT COUNT(id) FROM post"
     );
 
@@ -26,7 +27,7 @@ final class PostTable extends Table
   {
     $query = "
       SELECT p.* 
-      FROM post p 
+      FROM {$this->table} p 
       JOIN post_category pc ON pc.post_id = p.id 
       WHERE pc.category_id = {$categoryId} 
       ORDER BY created_at DESC";
@@ -39,5 +40,14 @@ final class PostTable extends Table
     $posts = $paginatedQuery->getItems($this->class);
     (new CategoryTable($this->pdo))->hydratePosts($posts);
     return [$posts, $paginatedQuery];
+  }
+
+  public function delete(int $id): void
+  {
+    $query = $this->pdo->prepare("DELETE FROM {$this->table} WHERE id = ?");
+    $ok = $query->execute([$id]);
+    if (!$ok) {
+      throw new Exception("Impossible de supprimer l'article $id de la table {$this->table}");
+    }
   }
 }

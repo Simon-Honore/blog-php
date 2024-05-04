@@ -4,21 +4,15 @@ namespace App\Model;
 
 use App\Helpers\Text;
 use DateTime;
-use DateTimeZone;
 
 class Post
 {
 
   private $id;
-
   private $name;
-
   private $slug;
-
   private $content;
-
   private $created_at;
-
   private $categories = [];
 
   /**
@@ -33,6 +27,11 @@ class Post
   {
     $this->name = $name;
     return $this;
+  }
+
+  public function getContent(): ?string
+  {
+    return $this->content;
   }
 
   public function setContent(string $content): self
@@ -53,9 +52,15 @@ class Post
     return $this->content ? nl2br(htmlentities(Text::excerpt($this->content, $limit))) : null;
   }
 
-  public function getDateTime(): DateTime
+  public function getCreatedAt(): DateTime
   {
     return new DateTime($this->created_at);
+  }
+
+  public function setCreatedAt(string $created_at): self
+  {
+    $this->created_at = $created_at;
+    return $this;
   }
 
   public function getId(): ?int
@@ -66,6 +71,12 @@ class Post
   public function getSlug(): ?string
   {
     return $this->slug;
+  }
+
+  public function setSlug(string $slug): self
+  {
+    $this->slug = $slug;
+    return $this;
   }
 
   public function getFormattedContent(): ?string

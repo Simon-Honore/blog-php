@@ -54,7 +54,7 @@ class Post
 
   public function getCreatedAt(): DateTime
   {
-    return new DateTime($this->created_at);
+    return new DateTime($this->created_at ?? '');
   }
 
   public function setCreatedAt(string $created_at): self
@@ -66,6 +66,12 @@ class Post
   public function getId(): ?int
   {
     return $this->id;
+  }
+
+  public function setId(int $id): self
+  {
+    $this->id = $id;
+    return $this;
   }
 
   public function getSlug(): ?string

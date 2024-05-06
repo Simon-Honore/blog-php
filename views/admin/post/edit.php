@@ -2,6 +2,7 @@
 
 use App\Connection;
 use App\HTML\Form;
+use App\ObjectHelper;
 use App\Table\PostTable;
 use App\Validator;
 use App\Validators\PostValidator;
@@ -17,11 +18,7 @@ $errors = [];
 if (!empty($_POST)) {
   Validator::lang('fr');
   $v = new PostValidator($_POST, $postTable, $post->getId());
-  $post
-    ->setName($_POST['name'])
-    ->setSlug($_POST['slug'])
-    ->setContent($_POST['content'])
-    ->setCreatedAt($_POST['created_at']);
+  ObjectHelper::hydrate($post, $_POST, ['name', 'slug', 'content', 'created_at']);
   if ($v->validate()) {
     $postTable->update($post);
     $success = true;
@@ -42,17 +39,16 @@ $form = new Form($post, $errors);
   </div>
 <?php endif ?>
 
+<?php if (isset($_GET['created'])) : ?>
+  <div class="alert alert-success">
+    L'article a bien été créé.
+  </div>
+<?php endif ?>
+
 <?php if (!empty($errors)) : ?>
   <div class="alert alert-danger">
     L'article n'a pas pu être modifié, merci de corriger vos erreurs.
   </div>
 <?php endif ?>
 
-<form action="" method="post">
-  <?= $form->input('name', 'Titre') ?>
-  <?= $form->input('slug', 'Slug') ?>
-  <?= $form->textarea('content', 'Contenu') ?>
-  <?= $form->input('created_at', 'Date de création') ?>
-
-  <button type="submit" class="btn btn-primary">Modifier</button>
-</form>
+<?php require('_form.php') ?>

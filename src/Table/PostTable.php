@@ -65,4 +65,19 @@ final class PostTable extends Table
       throw new Exception("Impossible de modifier l'article {$post->getName()} de la table {$this->table}");
     }
   }
+
+  public function create(Post $post): void
+  {
+    $query = $this->pdo->prepare("INSERT INTO {$this->table} SET name = :name, slug = :slug, created_at = :created, content = :content");
+    $ok = $query->execute([
+      'name' => $post->getName(),
+      'slug' => $post->getSlug(),
+      'content' => $post->getContent(),
+      'created' => $post->getCreatedAt()->format("Y-m-d H:i:s"),
+    ]);
+    if (!$ok) {
+      throw new Exception("Impossible de créer l'article {$post->getName()} de la table {$this->table}");
+    }
+    $post->setId($this->pdo->lastInsertId());
+  }
 }

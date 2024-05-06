@@ -32,5 +32,5 @@ $router
   ->get('/admin', 'admin/post/index', 'admin_posts')
   ->match('/admin/post/[i:id]', 'admin/post/edit', 'admin_post')
   ->post('/admin/post/[i:id]/delete', 'admin/post/delete', 'admin_post_delete')
-  ->get('/admin/post/new', 'admin/post/new', 'admin_post_new')
+  ->match('/admin/post/new', 'admin/post/new', 'admin_post_new')
   ->run();

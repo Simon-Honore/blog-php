@@ -12,7 +12,7 @@ $categories = array_map(function ($category) use ($router) {
 <div class="card h-100">
   <div class="card-body">
     <h5 class="card-title"><?= $post->getName() ?></h5>
-    <p class="text-muted"><?= $post->getDateTime()->format('d F Y') ?></p>
+    <p class="text-muted"><?= $post->getCreatedAt()->format('d F Y') ?></p>
     <div class="mb-3">
       <?= implode(', ', $categories) ?>
     </div>

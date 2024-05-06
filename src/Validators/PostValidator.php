@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Validators;
+
+use App\Table\PostTable;
+
+final class PostValidator extends AbstractValidator
+{
+
+  public function __construct(array $data, PostTable $table, ?int $postId = null)
+  {
+    parent::__construct($data);
+    $this->validator
+      ->rule('required', ['name', 'slug'])
+      ->rule('lengthBetween', ['name', 'slug'], 3, 200)
+      ->rule('slug', 'slug')
+      ->rule(function ($field, $value) use ($table, $postId) {
+        return !$table->exists($field, $value, $postId);
+      }, ['slug', 'name'], 'Cette valeur est déjà utilisé');
+  }
+}

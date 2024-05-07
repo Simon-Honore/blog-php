@@ -39,7 +39,7 @@ $link = $router->url('admin_posts');
         <td>#<?= $post->getId() ?></td>
         <td>
           <a href="<?= $router->url('admin_post', ['id' => $post->getId()]) ?>">
-            <?= $post->getName() ?>
+            <?= e($post->getName()) ?>
           </a>
         </td>
         <td>

@@ -25,7 +25,7 @@ $link = $router->url('category', ['slug' => $category->getSlug(), 'id' => $categ
 
 ?>
 
-<h1><?= $title ?></h1>
+<h1><?= e($title) ?></h1>
 
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 gy-2">
   <?php foreach ($posts as $post) : ?>

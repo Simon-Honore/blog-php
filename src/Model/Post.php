@@ -20,7 +20,7 @@ class Post
    */
   public function getName(): ?string
   {
-    return $this->name ? htmlentities($this->name) : null;
+    return $this->name;
   }
 
   public function setName(string $name): self

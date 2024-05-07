@@ -1,11 +1,14 @@
 <?php
 
+use App\Auth;
 use App\Connection;
 use App\HTML\Form;
 use App\ObjectHelper;
 use App\Table\PostTable;
 use App\Validator;
 use App\Validators\PostValidator;
+
+Auth::check();
 
 $pdo = Connection::getPDO();
 $postTable = new PostTable($pdo);
@@ -20,7 +23,7 @@ if (!empty($_POST)) {
   $v = new PostValidator($_POST, $postTable, $post->getId());
   ObjectHelper::hydrate($post, $_POST, ['name', 'slug', 'content', 'created_at']);
   if ($v->validate()) {
-    $postTable->update($post);
+    $postTable->updatePost($post);
     $success = true;
   } else {
     $errors = $v->errors();
@@ -31,7 +34,7 @@ $form = new Form($post, $errors);
 
 ?>
 
-<h1>edition de l'article <?= $post->getName() ?></h1>
+<h1>edition de l'article <?= e($post->getName()) ?></h1>
 
 <?php if ($success) : ?>
   <div class="alert alert-success">

@@ -32,4 +32,9 @@ final class CategoryTable extends Table
       $postsById[$category->getPostId()]->addCategory($category);
     }
   }
+
+  public function all(): array
+  {
+    return $this->queryAndFetchAll("SELECT * FROM {$this->table} ORDER BY name ASC");
+  }
 }

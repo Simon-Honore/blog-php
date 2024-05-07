@@ -1,5 +1,6 @@
 <?php
 
+use App\Auth;
 use App\Connection;
 use App\HTML\Form;
 use App\Model\Post;
@@ -7,6 +8,8 @@ use App\ObjectHelper;
 use App\Table\PostTable;
 use App\Validator;
 use App\Validators\PostValidator;
+
+Auth::check();
 
 $errors = [];
 
@@ -19,7 +22,7 @@ if (!empty($_POST)) {
   $v = new PostValidator($_POST, $postTable, $post->getId());
   ObjectHelper::hydrate($post, $_POST, ['name', 'slug', 'content', 'created_at']);
   if ($v->validate()) {
-    $postTable->create($post);
+    $postTable->createPost($post);
     header('Location: ' . $router->url('admin_post', ['id' => $post->getId()]) . '?created=1');
     exit();
   } else {

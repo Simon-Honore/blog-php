@@ -42,42 +42,24 @@ final class PostTable extends Table
     return [$posts, $paginatedQuery];
   }
 
-  public function delete(int $id): void
+  public function updatePost(Post $post): void
   {
-    $query = $this->pdo->prepare("DELETE FROM {$this->table} WHERE id = ?");
-    $ok = $query->execute([$id]);
-    if (!$ok) {
-      throw new Exception("Impossible de supprimer l'article $id de la table {$this->table}");
-    }
-  }
-
-  public function update(Post $post): void
-  {
-    $query = $this->pdo->prepare("UPDATE {$this->table} SET name = :name, slug = :slug, created_at = :created, content = :content WHERE id = :id");
-    $ok = $query->execute([
-      'id' => $post->getId(),
+    $this->update([
       'name' => $post->getName(),
       'slug' => $post->getSlug(),
       'content' => $post->getContent(),
-      'created' => $post->getCreatedAt()->format("Y-m-d H:i:s"),
-    ]);
-    if (!$ok) {
-      throw new Exception("Impossible de modifier l'article {$post->getName()} de la table {$this->table}");
-    }
+      'created_at' => $post->getCreatedAt()->format("Y-m-d H:i:s"),
+    ], $post->getId());
   }
 
-  public function create(Post $post): void
+  public function createPost(Post $post): void
   {
-    $query = $this->pdo->prepare("INSERT INTO {$this->table} SET name = :name, slug = :slug, created_at = :created, content = :content");
-    $ok = $query->execute([
+    $id = $this->create([
       'name' => $post->getName(),
       'slug' => $post->getSlug(),
       'content' => $post->getContent(),
-      'created' => $post->getCreatedAt()->format("Y-m-d H:i:s"),
+      'created_at' => $post->getCreatedAt()->format("Y-m-d H:i:s"),
     ]);
-    if (!$ok) {
-      throw new Exception("Impossible de créer l'article {$post->getName()} de la table {$this->table}");
-    }
-    $post->setId($this->pdo->lastInsertId());
+    $post->setId($id);
   }
 }

@@ -4,7 +4,6 @@ namespace App\Table;
 
 use App\Model\Post;
 use App\PaginatedQuery;
-use Exception;
 
 final class PostTable extends Table
 {

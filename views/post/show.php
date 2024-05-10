@@ -27,7 +27,7 @@ if ($post->getSlug() !== $slug) {
 
 <h1><?= e($post->getName()) ?></h1>
 
-<p class="text-muted"><?= $post->getDateTime()->format('d F Y') ?></p>
+<p class="text-muted"><?= $post->getCreatedAt()->format('d F Y') ?></p>
 
 <?php foreach ($post->getCategories() as $k => $category) : ?>
   <?= $k > 0 ? ', ' : '' ?>

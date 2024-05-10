@@ -38,7 +38,27 @@ class Form
     HTML;
   }
 
-  private function getValue(string $key): ?string
+  public function select(string $key, string $label, array $options = []): string
+  {
+    $value = $this->getValue($key);
+    $optionsHTML = array_map(function (int $k, string $v) use ($value): string {
+      $selected = in_array($k, $value) ? "selected" : "";
+      return <<<HTML
+        <option value="{$k}" {$selected}>{$v}</option>
+      HTML;
+    }, array_keys($options), array_values($options));
+    $optionsHTML = implode('', $optionsHTML);
+
+    return <<<HTML
+        <div class="mb-3">
+          <label for="field{$key}" class="form-label">{$label}</label>
+          <select class="{$this->getInputClass($key)}" id="field{$key}" name="{$key}[]" required multiple>{$optionsHTML}</select>
+          {$this->getErrorsFeedback($key)}
+        </div>
+    HTML;
+  }
+
+  private function getValue(string $key)
   {
     if (is_array($this->data)) {
       return $this->data[$key] ?? null;

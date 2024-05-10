@@ -62,4 +62,13 @@ final class PostTable extends Table
     ]);
     $post->setId($id);
   }
+
+  public function attachCategories(int $id, array $categoriesIds)
+  {
+    $this->pdo->exec("DELETE FROM post_category WHERE post_id = " . $id);
+    $query = $this->pdo->prepare("INSERT INTO post_category SET post_id = ?, category_id = ?");
+    foreach ($categoriesIds as $categoryId) {
+      $query->execute([$id, $categoryId]);
+    }
+  }
 }

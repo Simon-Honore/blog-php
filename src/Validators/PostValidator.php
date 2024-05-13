@@ -14,6 +14,7 @@ final class PostValidator extends AbstractValidator
       ->rule('required', ['name', 'slug'])
       ->rule('lengthBetween', ['name', 'slug'], 3, 200)
       ->rule('slug', 'slug')
+      ->rule('image', 'image')
       ->rule('subset', 'categories_ids', array_keys($categories))
       ->rule(function ($field, $value) use ($table, $postId) {
         return !$table->exists($field, $value, $postId);

@@ -10,6 +10,9 @@ $categories = array_map(function ($category) use ($router) {
 ?>
 
 <div class="card h-100">
+  <?php if ($post->getImage()) : ?>
+    <img src="<?= $post->getImageURL('small') ?>" alt="image de l'article" class="card-img-top">
+  <?php endif ?>
   <div class="card-body">
     <h5 class="card-title"><?= $post->getName() ?></h5>
     <p class="text-muted"><?= $post->getCreatedAt()->format('d F Y') ?></p>

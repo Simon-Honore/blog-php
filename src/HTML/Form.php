@@ -28,6 +28,17 @@ class Form
     HTML;
   }
 
+  public function file(string $key, string $label): string
+  {
+    return <<<HTML
+        <div class="mb-3">
+          <label for="field{$key}" class="form-label">$label</label>
+          <input type="file" class="{$this->getInputClass($key)}" id="field{$key}" name="{$key}" />
+          {$this->getErrorsFeedback($key)}
+        </div>
+    HTML;
+  }
+
   public function textarea(string $key, string $label): string
   {
     return <<<HTML
